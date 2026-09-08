@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 import {
   Pressable,
   SafeAreaView,
@@ -19,6 +20,8 @@ type Transaction = {
   type: TransactionType;
 };
 
+const STORAGE_KEY = 'expense-tracker-transactions';
+
 const initialTransactions: Transaction[] = [
   {
     id: '1',
@@ -38,11 +41,52 @@ export default function App() {
   const [transactions, setTransactions] =
     useState<Transaction[]>(initialTransactions);
 
+  const [isLoaded, setIsLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [type, setType] = useState<TransactionType>('expense');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const loadTransactions = async () => {
+      try {
+        const savedTransactions = await AsyncStorage.getItem(STORAGE_KEY);
+
+        if (savedTransactions) {
+          const parsedTransactions =
+            JSON.parse(savedTransactions) as Transaction[];
+
+          setTransactions(parsedTransactions);
+        }
+      } catch (storageError) {
+        console.error('ไม่สามารถโหลดข้อมูลได้', storageError);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+
+    loadTransactions();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      return;
+    }
+
+    const saveTransactions = async () => {
+      try {
+        await AsyncStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(transactions),
+        );
+      } catch (storageError) {
+        console.error('ไม่สามารถบันทึกข้อมูลได้', storageError);
+      }
+    };
+
+    saveTransactions();
+  }, [transactions, isLoaded]);
 
   const totalIncome = transactions
     .filter((item) => item.type === 'income')
@@ -117,6 +161,7 @@ export default function App() {
 
           <View style={styles.balanceCard}>
             <Text style={styles.balanceLabel}>ยอดเงินคงเหลือ</Text>
+
             <Text style={styles.balance}>
               ฿ {formatMoney(balance)}
             </Text>
@@ -125,6 +170,7 @@ export default function App() {
           <View style={styles.summaryRow}>
             <View style={styles.summaryCard}>
               <Text style={styles.summaryLabel}>รายรับ</Text>
+
               <Text style={styles.income}>
                 ฿ {formatMoney(totalIncome)}
               </Text>
@@ -132,6 +178,7 @@ export default function App() {
 
             <View style={styles.summaryCard}>
               <Text style={styles.summaryLabel}>รายจ่าย</Text>
+
               <Text style={styles.expense}>
                 ฿ {formatMoney(totalExpense)}
               </Text>
@@ -155,6 +202,7 @@ export default function App() {
               <Text style={styles.formTitle}>เพิ่มรายการใหม่</Text>
 
               <Text style={styles.inputLabel}>ชื่อรายการ</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="เช่น ค่าอาหาร"
@@ -164,6 +212,7 @@ export default function App() {
               />
 
               <Text style={styles.inputLabel}>จำนวนเงิน</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="เช่น 150"
@@ -235,7 +284,10 @@ export default function App() {
             {transactions.map((item) => (
               <View style={styles.transactionRow} key={item.id}>
                 <View style={styles.transactionInfo}>
-                  <Text style={styles.transactionTitle}>{item.title}</Text>
+                  <Text style={styles.transactionTitle}>
+                    {item.title}
+                  </Text>
+
                   <Text style={styles.transactionType}>
                     {item.type === 'income' ? 'รายรับ' : 'รายจ่าย'}
                   </Text>
