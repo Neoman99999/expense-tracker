@@ -141,6 +141,12 @@ export default function App() {
     resetForm();
   };
 
+  const deleteTransaction = (id: string) => {
+    setTransactions((currentTransactions) =>
+      currentTransactions.filter((item) => item.id !== id),
+    );
+  };
+
   return (
     <SafeAreaView style={styles.page}>
       <StatusBar barStyle="light-content" />
@@ -161,16 +167,12 @@ export default function App() {
 
           <View style={styles.balanceCard}>
             <Text style={styles.balanceLabel}>ยอดเงินคงเหลือ</Text>
-
-            <Text style={styles.balance}>
-              ฿ {formatMoney(balance)}
-            </Text>
+            <Text style={styles.balance}>฿ {formatMoney(balance)}</Text>
           </View>
 
           <View style={styles.summaryRow}>
             <View style={styles.summaryCard}>
               <Text style={styles.summaryLabel}>รายรับ</Text>
-
               <Text style={styles.income}>
                 ฿ {formatMoney(totalIncome)}
               </Text>
@@ -178,7 +180,6 @@ export default function App() {
 
             <View style={styles.summaryCard}>
               <Text style={styles.summaryLabel}>รายจ่าย</Text>
-
               <Text style={styles.expense}>
                 ฿ {formatMoney(totalExpense)}
               </Text>
@@ -202,7 +203,6 @@ export default function App() {
               <Text style={styles.formTitle}>เพิ่มรายการใหม่</Text>
 
               <Text style={styles.inputLabel}>ชื่อรายการ</Text>
-
               <TextInput
                 style={styles.input}
                 placeholder="เช่น ค่าอาหาร"
@@ -212,7 +212,6 @@ export default function App() {
               />
 
               <Text style={styles.inputLabel}>จำนวนเงิน</Text>
-
               <TextInput
                 style={styles.input}
                 placeholder="เช่น 150"
@@ -281,30 +280,46 @@ export default function App() {
           <Text style={styles.sectionTitle}>รายการล่าสุด</Text>
 
           <View style={styles.transactionCard}>
-            {transactions.map((item) => (
-              <View style={styles.transactionRow} key={item.id}>
-                <View style={styles.transactionInfo}>
-                  <Text style={styles.transactionTitle}>
-                    {item.title}
-                  </Text>
+            {transactions.length === 0 ? (
+              <Text style={styles.emptyText}>ยังไม่มีรายการ</Text>
+            ) : (
+              transactions.map((item) => (
+                <View style={styles.transactionRow} key={item.id}>
+                  <View style={styles.transactionInfo}>
+                    <Text style={styles.transactionTitle}>
+                      {item.title}
+                    </Text>
 
-                  <Text style={styles.transactionType}>
-                    {item.type === 'income' ? 'รายรับ' : 'รายจ่าย'}
-                  </Text>
+                    <Text style={styles.transactionType}>
+                      {item.type === 'income' ? 'รายรับ' : 'รายจ่าย'}
+                    </Text>
+                  </View>
+
+                  <View style={styles.transactionActions}>
+                    <Text
+                      style={
+                        item.type === 'income'
+                          ? styles.incomeAmount
+                          : styles.expenseAmount
+                      }
+                    >
+                      {item.type === 'income' ? '+' : '-'} ฿
+                      {formatMoney(item.amount)}
+                    </Text>
+
+                    <Pressable
+                      style={({ pressed }) => [
+                        styles.deleteButton,
+                        pressed && styles.buttonPressed,
+                      ]}
+                      onPress={() => deleteTransaction(item.id)}
+                    >
+                      <Text style={styles.deleteButtonText}>ลบ</Text>
+                    </Pressable>
+                  </View>
                 </View>
-
-                <Text
-                  style={
-                    item.type === 'income'
-                      ? styles.incomeAmount
-                      : styles.expenseAmount
-                  }
-                >
-                  {item.type === 'income' ? '+' : '-'} ฿
-                  {formatMoney(item.amount)}
-                </Text>
-              </View>
-            ))}
+              ))
+            )}
           </View>
         </ScrollView>
       </View>
@@ -526,6 +541,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 3,
   },
+  transactionActions: {
+    alignItems: 'flex-end',
+    gap: 7,
+  },
   incomeAmount: {
     color: '#00BE23',
     fontSize: 14,
@@ -535,5 +554,22 @@ const styles = StyleSheet.create({
     color: '#E31212',
     fontSize: 14,
     fontWeight: '700',
+  },
+  deleteButton: {
+    backgroundColor: '#FFE8E8',
+    borderRadius: 7,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  deleteButtonText: {
+    color: '#E31212',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  emptyText: {
+    color: '#8A9090',
+    fontSize: 14,
+    textAlign: 'center',
+    paddingVertical: 25,
   },
 });
