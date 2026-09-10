@@ -6,8 +6,8 @@ import { colors, shadow } from '../theme';
 
 export function SignInScreen({ onSignUp }: { onSignUp: () => void }) {
   const { signIn } = useApp();
-  const [email, setEmail] = useState('demo@email.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const submit = async () => setError((await signIn(email.trim(), password)) ?? '');
 
@@ -49,7 +49,7 @@ function AuthLayout({ title, subtitle, children }: { title: string; subtitle: st
       <View style={styles.brand}><Text style={styles.brandIcon}>฿</Text><Text style={styles.brandName}>Expense Tracker</Text><Text style={styles.brandSub}>จัดการเงินของคุณให้ง่ายขึ้น</Text></View>
       <ScrollView style={styles.sheet} contentContainerStyle={styles.sheetContent} keyboardShouldPersistTaps="handled">
         <View style={styles.card}><Text style={styles.title}>{title}</Text><Text style={styles.subtitle}>{subtitle}</Text>{children}</View>
-        <Text style={styles.demo}>บัญชีทดลอง: demo@email.com / 123456</Text>
+        <Text style={styles.demo}>สมัครบัญชีใหม่เพื่อเริ่มบันทึกรายรับ–รายจ่าย</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );

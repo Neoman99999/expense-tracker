@@ -114,12 +114,16 @@ export function ProfileScreen({ navigate }: { navigate: (route: RouteName) => vo
   const { currentUser, updateProfile, signOut, transactions } = useApp();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(currentUser?.name ?? '');
-  const [email, setEmail] = useState(currentUser?.email ?? '');
-  const save = async () => { if (name.trim() && email.includes('@')) { await updateProfile({ name: name.trim(), email: email.trim() }); setEditing(false); } };
+  const save = async () => {
+    if (name.trim() && currentUser) {
+      await updateProfile({ name: name.trim(), email: currentUser.email });
+      setEditing(false);
+    }
+  };
 
   return <Page title="โปรไฟล์" subtitle="ข้อมูลบัญชีของคุณ" footer={false}>
     <View style={styles.profileHero}><View style={styles.profileAvatar}><Text style={styles.profileAvatarText}>{(currentUser?.name ?? 'U').slice(0, 1).toUpperCase()}</Text></View><Text style={styles.profileName}>{currentUser?.name}</Text><Text style={styles.profileEmail}>{currentUser?.email}</Text><Text style={styles.profileCount}>{transactions.length} รายการที่บันทึกไว้</Text></View>
-    <View style={styles.card}><Text style={styles.sectionTitle}>Account settings</Text>{editing ? <><Field label="ชื่อผู้ใช้" value={name} onChangeText={setName} /><Field label="อีเมล" value={email} onChangeText={setEmail} autoCapitalize="none" /><PrimaryButton label="บันทึกโปรไฟล์" onPress={save} /><Pressable style={styles.cancel} onPress={() => setEditing(false)}><Text style={styles.cancelText}>ยกเลิก</Text></Pressable></> : <><ProfileLine label="Username" value={currentUser?.name ?? '-'} /><ProfileLine label="Email" value={currentUser?.email ?? '-'} /><PrimaryButton label="แก้ไขโปรไฟล์" onPress={() => setEditing(true)} /></>}</View>
+    <View style={styles.card}><Text style={styles.sectionTitle}>Account settings</Text>{editing ? <><Field label="ชื่อผู้ใช้" value={name} onChangeText={setName} /><ProfileLine label="Email (ใช้เข้าสู่ระบบ)" value={currentUser?.email ?? '-'} /><PrimaryButton label="บันทึกโปรไฟล์" onPress={save} /><Pressable style={styles.cancel} onPress={() => setEditing(false)}><Text style={styles.cancelText}>ยกเลิก</Text></Pressable></> : <><ProfileLine label="Username" value={currentUser?.name ?? '-'} /><ProfileLine label="Email" value={currentUser?.email ?? '-'} /><PrimaryButton label="แก้ไขโปรไฟล์" onPress={() => setEditing(true)} /></>}</View>
     <View style={styles.profileButtons}><PrimaryButton label="กลับหน้าหลัก" onPress={() => navigate('dashboard')} /><PrimaryButton label="ออกจากระบบ" tone="red" onPress={signOut} /></View>
   </Page>;
 }
