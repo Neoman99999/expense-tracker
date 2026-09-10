@@ -6,7 +6,7 @@ A full-featured expense tracking application adapted from my previous Mobile Wal
 
 | Sign In | Dashboard |
 | --- | --- |
-| <img src="screenshots/login.png" width="300" alt="Sign in screen"> | <img src="screenshots/dashboard.png" width="300" alt="Dashboard screen"> |
+| <img src="screenshots/login.png?v=2" width="300" alt="Sign in screen"> | <img src="screenshots/dashboard.png" width="300" alt="Dashboard screen"> |
 
 | Transaction History | Yearly Summary | Profile |
 | --- | --- | --- |
