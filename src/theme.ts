@@ -1,0 +1,2 @@
+export const colors = { navy: '#112250', navySoft: '#1B326B', ink: '#093030', text: '#263333', muted: '#7B8585', background: '#F6F7F9', white: '#FFFFFF', line: '#E7E9ED', input: '#F0F2F5', income: '#00BE23', expense: '#E31212', purple: '#3629B7', orange: '#FF9F43', blue: '#2F80ED' };
+export const shadow = { shadowColor: '#000000', shadowOpacity: 0.08, shadowRadius: 12, shadowOffset: { width: 0, height: 5 }, elevation: 3 };

@@ -1,6 +1,6 @@
 # Expense Tracker
 
-A simple mobile expense tracker built with React Native and Expo. The application allows users to record income and expenses, automatically calculate their balance, and save transaction data locally.
+A mobile expense tracker adapted from my previous Mobile Wallet design in Figma. It demonstrates a complete multi-screen flow built with React Native, Expo, and TypeScript.
 
 ## Screenshot
 
@@ -9,10 +9,14 @@ A simple mobile expense tracker built with React Native and Expo. The applicatio
 ## Features
 
 - Add income and expense transactions
+- Edit transactions with category, date, time, and notes
 - Automatically calculate total income, expenses, and balance
-- Display recent transactions
+- Dashboard with recent transactions and spending by category
+- Search and filter transaction history
 - Delete transactions
 - Save data locally using AsyncStorage
+- Sign-in, sign-up, editable profile, and persistent local session
+- Yearly income and expense summary with a monthly chart
 - Responsive mobile-style interface
 
 ## Technologies Used
@@ -41,6 +45,13 @@ Run the project on the web:
 
 ```bash
 npm run web
+```
+
+Demo account:
+
+```text
+Email: demo@email.com
+Password: 123456
 ```
 
 ## Project Purpose
