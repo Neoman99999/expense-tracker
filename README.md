@@ -1,7 +1,6 @@
 # Expense Tracker
 
-A mobile expense tracker adapted from my previous Mobile Wallet design in Figma.  
-The project demonstrates a complete multi-screen application built with React Native, Expo, and TypeScript.
+A full-featured expense tracking application adapted from my previous Mobile Wallet design in Figma. The project demonstrates a multi-screen application built with React Native, Expo, TypeScript, Firebase Authentication, and Cloud Firestore.
 
 ## Screenshots
 
@@ -15,17 +14,19 @@ The project demonstrates a complete multi-screen application built with React Na
 
 ## Features
 
-- Sign in, sign up, edit profile, and sign out
-- Persistent local user session
+- Register and sign in with email and password
+- Persistent Firebase Authentication session
+- Edit user profile and sign out
 - Add income and expense transactions
 - Edit and delete transactions
 - Select transaction type and category
-- Record date, time, and notes
-- Automatically calculate income, expenses, and balance
+- Record transaction date, time, and notes
+- Automatically calculate total income, expenses, and balance
 - Dashboard with spending progress and category breakdown
 - Search and filter transaction history
 - Yearly summary with a monthly bar chart
-- Save transaction data locally using AsyncStorage
+- Real-time transaction updates from Cloud Firestore
+- User-specific data protected by Firestore Security Rules
 - Responsive mobile-style interface
 
 ## Technologies Used
@@ -33,9 +34,31 @@ The project demonstrates a complete multi-screen application built with React Na
 - React Native
 - Expo
 - TypeScript
-- AsyncStorage
+- Firebase Authentication
+- Cloud Firestore
+- AsyncStorage for authentication persistence
 - React Native Web
 - Figma
+
+## Database Structure
+
+```text
+users
+└── {userId}
+    ├── name
+    ├── email
+    └── transactions
+        └── {transactionId}
+            ├── title
+            ├── amount
+            ├── type
+            ├── category
+            ├── date
+            ├── time
+            └── note
+```
+
+Each authenticated user can access only their own profile and transactions through Firestore Security Rules.
 
 ## Design
 
@@ -64,13 +87,14 @@ Run the project on the web:
 npm run web
 ```
 
-## Demo Account
+You can create a new account from the sign-up screen and begin adding income or expense transactions.
 
-```text
-Email: demo@email.com
-Password: 123456
-```
+## Security
+
+Firestore rules require an authenticated user and restrict access to documents whose User ID matches the current Firebase Authentication UID.
+
+The active rules are available in [`firestore.rules`](firestore.rules).
 
 ## Project Purpose
 
-This project was created to demonstrate my ability to design and develop a functional mobile application using React Native, Expo, TypeScript, local data persistence, and Figma.
+This project was created to demonstrate my ability to design and develop a functional mobile application using React Native, Expo, TypeScript, Firebase Authentication, Cloud Firestore, and Figma.
